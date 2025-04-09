@@ -12,6 +12,8 @@ https://qfish.fisheries.qld.gov.au/query/charter-catch-and-effort/table#
 
 # Research Question
 
+What is the relationship between the number of fishing licenses issued and 
+the number of days spent at sea?
 
 # Load data 
 ```{r}
@@ -23,10 +25,11 @@ Data1<-read.csv("data/Data1.csv")
 library(tidyverse)
 library(ggplot2)
 library(janitor)
+library(dplyr)
 ```
 
 
-# Data exploration
+# Data exploration and cleaning
 
 ```{r}
 head(Data1)
@@ -34,6 +37,7 @@ head(Data1)
 
 
 ```{r}
+# Convert the first row of Data1 into header names and clean them up
 Data_clean<- clean_names(
   row_to_names(Data1, row_number = 1)
 )
@@ -56,12 +60,54 @@ Line <- Data_clean |>
   filter(!is.na(CalendarYear))
 ```
 
+```{r}
+# Create a new data frame 'Combination'
+Combination <- Data_clean |> 
+  select(x | contains("combination")) |> 
+  row_to_names(row_number = 1) |>
+  mutate(across(is.character, as.numeric)) |>
+  filter(!is.na(CalendarYear))
+```
+
+
+```{r}
+# Filter out rows with NA values in the specified columns
+Combination_clean <- Combination %>% filter(!is.na(Licences), !is.na(Days))
+```
+
+
+# Plot graph
+
+```{r}
+ggplot(Combination_clean, aes(x = Licences, y = Days)) +
+  geom_point() +
+  labs(title = "Scatter plot of Licences vs Days",
+       x = "Licences",
+       y = "Days") +
+  theme_minimal()
+
+```
 
 
 
+```{r}
+ggplot(Combination_clean, aes(x = Licences, y = Days)) +
+  geom_point(alpha = 0.7, size = 2) +
+  geom_smooth(method = "loess", se = TRUE, color = "red") +
+  labs(
+    title = "Relationship between fishing licences and days at sea",
+    x = "no. Licences",
+    y = "no. Days at Sea",
+    caption = "Source: Your Data"
+  ) +
+  theme_minimal() +
+  theme(
+    plot.title = element_text(size = 14, face = "bold", hjust = 0.5),
+    axis.title = element_text(size = 12),
+    panel.border = element_rect(color = "black", fill = NA, size = 1)
+  )
 
-
-
+```
 
 
 
