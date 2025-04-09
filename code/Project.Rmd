@@ -1,0 +1,28 @@
+---
+title: "Project"
+author: "Liliana Iotebatu"
+date: "2025-04-09"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Data downloaded from: 
+
+https://qfish.fisheries.qld.gov.au/query/charter-catch-and-effort/table#
+
+# Load data 
+```{r}
+Data1<-read.csv("data/Data1.csv")
+```
+
+# Data exploration
+
+```{r}
+summary(Data1)
+```
+
+
+
