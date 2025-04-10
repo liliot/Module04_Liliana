@@ -106,9 +106,9 @@ ggplot(Combination_clean, aes(x = Licences, y = Days)) +
 
 
 **Comment**
-The plot shows a positive relationship between the number of licences and days spent at sea; as licence numbers increase, 
-so do days at sea, but this increase eventually levels off, suggesting that after a certain point additional licences 
-contribute less to increased fishing effort.
+The plot reveals a clear positive trend between the number of licences and days spent at sea. Initially, increases in 
+licences correspond to more days at sea, but the growth eventually tapers off, indicating that beyond a certain point, 
+additional licences yield diminishing increases in fishing effort.
 
 
 
