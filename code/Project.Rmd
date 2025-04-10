@@ -12,7 +12,7 @@ https://qfish.fisheries.qld.gov.au/query/charter-catch-and-effort/table#
 
 # Research Question
 
-What is the relationship between the number of fishing licenses issued and 
+What is the relationship between the number of Line fishing licenses issued and 
 the number of days spent at sea?
 
 
@@ -43,56 +43,56 @@ Data_clean<- clean_names(
 )
 ```
 
-```{r, warning=FALSE}
-# Create a new data frame 'Combination'
-Combination <- Data_clean |> 
-  select(na | contains("combination")) |> 
+
+```{r, warning=FALSE,message=FALSE}
+# Create new dataframe for Line
+Line <- Data_clean |> 
+  select(na | contains("line")) |> 
   row_to_names(row_number = 1) |>
   mutate(across(is.character, as.numeric)) |>
   filter(!is.na(CalendarYear))
 ```
 
 
-```{r}
+```{r, warning=FALSE,message=FALSE}
 # Filter out rows with NA values in the specified columns
-Combination_clean <- Combination %>% filter(!is.na(Licences), !is.na(Days))
-head(Combination_clean)
+Line_clean <- Line %>% filter(!is.na(Licences), !is.na(Days))
+head(Line_clean)
 ```
 
 
 # Plot graph
 
-```{r, warning=FALSE}
-ggplot(Combination_clean, aes(x = CalendarYear, y = Licences)) +
-  geom_line(color = "black", size = 1) +  # draws the line
-  geom_point(color = "black", size = 1) +  # adds points for each observation
+```{r, warning=FALSE, message=FALSE}
+ggplot(Line_clean, aes(x = factor(CalendarYear), y = Licences)) +
+  geom_col(fill = "steelblue") +       # Use geom_col() to create bars
+  coord_flip() +                       # Flip coordinates for a horizontal layout
   labs(
-    title = "Number of Licences by Year",
+    title = "Total no. of Licences by Year",
     x = "Year",
-    y = "Number of Licences"
+    y = "Number of Licenses"
   ) +
   theme_minimal() +
   theme(
     plot.title = element_text(hjust = 0.5, face = "bold"),
     panel.border = element_rect(fill = NA, color = "grey", size = 1)
   )
-
 ```
 
 
 **Comment**
-Licences fluctuate significantly from 2000 to 2010 (with notable peaks around the late 2000s), then settle 
-into lower, more stable numbers in the mid- to late 2010s, ending with a slight upward trend in recent years.
-
+This bar chart shows yearly licence totals, revealing notable peaks around the mid-2000s 
+and lower counts in other years. The variation suggests shifting licensing activity over time, 
+with some standout spikes against more moderate levels in other periods.
 
 ```{r, warning=FALSE, message=FALSE}
-ggplot(Combination_clean, aes(x = Licences, y = Days)) +
+ggplot(Line_clean, aes(x = Licences, y = Days)) +
   geom_point(alpha = 0.7, size = 2) +
   geom_smooth(method = "loess", se = TRUE, color = "red") +
   labs(
-    title = "Relationship between fishing licences and days at sea",
+    title = "Relationship between line fishing licences and annual days at sea",
     x = "no. Licences",
-    y = "no. Days at Sea",
+    y = "no. Days at Sea (annual total)",
     caption = "Source: Your Data"
   ) +
   theme_minimal() +
@@ -101,15 +101,13 @@ ggplot(Combination_clean, aes(x = Licences, y = Days)) +
     axis.title = element_text(size = 12),
     panel.border = element_rect(color = "grey", fill = NA, size = 1)
   )
-
 ```
 
 
 **Comment**
-The plot reveals a clear positive trend between the number of licences and days spent at sea. Initially, increases in 
-licences correspond to more days at sea, but the growth eventually tapers off, indicating that beyond a certain point, 
-additional licences yield diminishing increases in fishing effort.
-
+This graph shows a strong positive relationship between the number of line fishing licences and annual days at sea.
+The red LOESS curve, along with its confidence band, indicates that as licences increase, fishing effort
+(measured by days at sea) generally rises, despite some variation across the dataset.
 
 
 
