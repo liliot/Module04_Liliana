@@ -110,4 +110,7 @@ ggplot(Combination_clean, aes(x = Licences, y = Days)) +
 ```
 
 
+```{r}
+
+```
 
