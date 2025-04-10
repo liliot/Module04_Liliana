@@ -1,5 +1,5 @@
 ---
-title: "Project"
+title: "Data wrangling Project"
 author: "Liliana Iotebatu"
 date: "2025-04-09"
 output: html_document
@@ -15,55 +15,38 @@ https://qfish.fisheries.qld.gov.au/query/charter-catch-and-effort/table#
 What is the relationship between the number of fishing licenses issued and 
 the number of days spent at sea?
 
-# Load data 
-```{r}
-Data1<-read.csv("data/Data1.csv")
+
+```{r setup, include=FALSE}
+knitr::opts_knit$set(root.dir = "C:/Users/User/OneDrive - James Cook University/Desktop/2025 subjects/Techniques 1/Data science in R/MB5370_Module_04/MB5370_Module_04/Module04_Liliana")
+
 ```
 
-#Packages
-```{r}
+# Packages
+```{r, warning=FALSE,message=FALSE} 
 library(tidyverse)
 library(ggplot2)
 library(janitor)
-library(dplyr)
 ```
 
+# Load data 
+
+```{r, warning=FALSE,message=FALSE}
+Data1<-read_csv("data/Data1.csv")
+```
 
 # Data exploration and cleaning
 
-```{r}
-head(Data1)
-```
-
-
-```{r}
+```{r, warning=FALSE}
 # Convert the first row of Data1 into header names and clean them up
 Data_clean<- clean_names(
   row_to_names(Data1, row_number = 1)
 )
-head (Data_clean)
 ```
 
-```{r}
-diving <- Data_clean |>
-  select(x | contains("diving")) |>
-  row_to_names(row_number = 1) |>
-  mutate(across(is.character, as.numeric)) |>
-  filter(!is.na(CalendarYear))
-```
-
-```{r}
-Line <- Data_clean |>
-  select(x | contains("line")) |>
-  row_to_names(row_number = 1) |>
-  mutate(across(is.character, as.numeric)) |>
-  filter(!is.na(CalendarYear))
-```
-
-```{r}
+```{r, warning=FALSE}
 # Create a new data frame 'Combination'
 Combination <- Data_clean |> 
-  select(x | contains("combination")) |> 
+  select(na | contains("combination")) |> 
   row_to_names(row_number = 1) |>
   mutate(across(is.character, as.numeric)) |>
   filter(!is.na(CalendarYear))
@@ -73,24 +56,36 @@ Combination <- Data_clean |>
 ```{r}
 # Filter out rows with NA values in the specified columns
 Combination_clean <- Combination %>% filter(!is.na(Licences), !is.na(Days))
+head(Combination_clean)
 ```
 
 
 # Plot graph
 
-```{r}
-ggplot(Combination_clean, aes(x = Licences, y = Days)) +
-  geom_point() +
-  labs(title = "Scatter plot of Licences vs Days",
-       x = "Licences",
-       y = "Days") +
-  theme_minimal()
+```{r, warning=FALSE}
+ggplot(Combination_clean, aes(x = CalendarYear, y = Licences)) +
+  geom_line(color = "black", size = 1) +  # draws the line
+  geom_point(color = "black", size = 1) +  # adds points for each observation
+  labs(
+    title = "Number of Licences by Year",
+    x = "Year",
+    y = "Number of Licences"
+  ) +
+  theme_minimal() +
+  theme(
+    plot.title = element_text(hjust = 0.5, face = "bold"),
+    panel.border = element_rect(fill = NA, color = "grey", size = 1)
+  )
 
 ```
 
 
+**Comment**
+Licences fluctuate significantly from 2000 to 2010 (with notable peaks around the late 2000s), then settle 
+into lower, more stable numbers in the mid- to late 2010s, ending with a slight upward trend in recent years.
 
-```{r}
+
+```{r, warning=FALSE, message=FALSE}
 ggplot(Combination_clean, aes(x = Licences, y = Days)) +
   geom_point(alpha = 0.7, size = 2) +
   geom_smooth(method = "loess", se = TRUE, color = "red") +
@@ -104,13 +99,21 @@ ggplot(Combination_clean, aes(x = Licences, y = Days)) +
   theme(
     plot.title = element_text(size = 14, face = "bold", hjust = 0.5),
     axis.title = element_text(size = 12),
-    panel.border = element_rect(color = "black", fill = NA, size = 1)
+    panel.border = element_rect(color = "grey", fill = NA, size = 1)
   )
 
 ```
 
 
-```{r}
+**Comment**
+The plot shows a positive relationship between the number of licences and days spent at sea; as licence numbers increase, 
+so do days at sea, but this increase eventually levels off, suggesting that after a certain point additional licences 
+contribute less to increased fishing effort.
 
-```
+
+
+
+
+
+
 
