@@ -64,7 +64,7 @@ head(Line_clean)
 # Plot graph
 
 ```{r, warning=FALSE, message=FALSE}
-ggplot(Line_clean, aes(x = factor(CalendarYear), y = Licences)) +
+plot1<- ggplot(Line_clean, aes(x = factor(CalendarYear), y = Licences)) +
   geom_col(fill = "steelblue") +       # Use geom_col() to create bars
   coord_flip() +                       # Flip coordinates for a horizontal layout
   labs(
@@ -86,19 +86,19 @@ and lower counts in other years. The variation suggests shifting licensing activ
 with some standout spikes against more moderate levels in other periods.
 
 ```{r, warning=FALSE, message=FALSE}
-ggplot(Line_clean, aes(x = Licences, y = Days)) +
+plot2<- ggplot(Line_clean, aes(x = Licences, y = Days)) +
   geom_point(alpha = 0.7, size = 2) +
   geom_smooth(method = "loess", se = TRUE, color = "red") +
   labs(
-    title = "Relationship between line fishing licences and annual days at sea",
+    title = "Relationship between no. fishing licences and annual days at sea",
     x = "no. Licences",
     y = "no. Days at Sea (annual total)",
-    caption = "Source: Your Data"
+    
   ) +
   theme_minimal() +
   theme(
-    plot.title = element_text(size = 14, face = "bold", hjust = 0.5),
-    axis.title = element_text(size = 12),
+    plot.title = element_text(size = 12, face = "bold", hjust = 0.5),
+    axis.title = element_text(size = 11),
     panel.border = element_rect(color = "grey", fill = NA, size = 1)
   )
 ```
@@ -106,9 +106,15 @@ ggplot(Line_clean, aes(x = Licences, y = Days)) +
 
 **Comment**
 This graph shows a strong positive relationship between the number of line fishing licences and annual days at sea.
-The red LOESS curve, along with its confidence band, indicates that as licences increase, fishing effort
-(measured by days at sea) generally rises, despite some variation across the dataset.
+The red LOESS curve, along with its confidence band, indicates that as licences increase, fishing effort(measured by days at sea) generally rises, despite some variation across the dataset.
 
+# Save the plot
+
+```{r, warning=FALSE, message=FALSE}
+ggsave("plot1.jpeg", plot = plot1, width = 6, height = 4, dpi = 300, units = "in")
+ggsave("plot2.jpeg", plot = plot2, width = 6, height = 4, dpi = 300, units = "in")
+
+```
 
 
 
